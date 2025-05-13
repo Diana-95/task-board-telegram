@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import Image from "next/image";
 import TaskList from "./components/TaskList";
 import TaskForm from "./components/TaskForm";
-import { initData } from '@telegram-apps/sdk';
+import { initData, initDataRaw } from '@telegram-apps/sdk';
 
 import dynamic from 'next/dynamic';
 
@@ -19,6 +19,12 @@ function TaskBoard() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
 
+  // Decode the data from initData
+  const urlParams = new URLSearchParams(initDataRaw());
+  const startParam = urlParams.get('start_param');
+  
+  console.log('Start Param:', startParam);
+
   useEffect(() => {
     const initializeComponent = async () => {
       try {
@@ -30,7 +36,7 @@ function TaskBoard() {
             setGroupId(decodedGroupId);
           } catch (error) {
             console.error("Error decoding group ID:", error);
-            setError("Invalid group ID format");
+            setError("Invalid group ID format, ${JSON.stringify(initData)");
           }
         } else {
           console.log("No start_param available");
