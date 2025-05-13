@@ -4,7 +4,8 @@ import { Suspense, useEffect, useState } from 'react';
 import Image from "next/image";
 import TaskList from "./components/TaskList";
 import TaskForm from "./components/TaskForm";
-import { useLaunchParams } from "@telegram-apps/sdk-react";
+import { initData } from '@telegram-apps/sdk';
+
 import dynamic from 'next/dynamic';
 
 // Créer un composant client-only pour le TaskBoard
@@ -16,13 +17,13 @@ function TaskBoard() {
   const [groupId, setGroupId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const launchParams = useLaunchParams();
+
 
   useEffect(() => {
     const initializeComponent = async () => {
       try {
-        if (launchParams?.start_param) {
-          const encodedGroupId = launchParams.start_param;
+        if (initData?.startParam) {
+          const encodedGroupId = initData.startParam;
           try {
             const decodedGroupId = atob(String(encodedGroupId));
             console.log("Decoded Group ID:", decodedGroupId);
@@ -33,7 +34,7 @@ function TaskBoard() {
           }
         } else {
           console.log("No start_param available");
-          setError(`No group ID provided, ${JSON.stringify(launchParams)}`);
+          setError(`No group ID provided, ${JSON.stringify(initData)}`);
         }
       } catch (error) {
         console.error("Error in initializeComponent:", error);
@@ -44,7 +45,7 @@ function TaskBoard() {
     };
 
     initializeComponent();
-  }, [launchParams]);
+  }, []);
 
   if (isLoading) {
     return <div className="p-8">Loading...</div>;
