@@ -21,8 +21,8 @@ function TaskBoard() {
   useEffect(() => {
     const initializeComponent = async () => {
       try {
-        if (launchParams?.startParam) {
-          const encodedGroupId = launchParams.startParam;
+        if (launchParams?.startapp) {
+          const encodedGroupId = launchParams.startapp;
           try {
             const decodedGroupId = atob(String(encodedGroupId));
             console.log("Decoded Group ID:", decodedGroupId);
@@ -33,7 +33,7 @@ function TaskBoard() {
           }
         } else {
           console.log("No start_param available");
-          setError("No group ID provided");
+          setError(`No group ID provided, ${launchParams}`);
         }
       } catch (error) {
         console.error("Error in initializeComponent:", error);
