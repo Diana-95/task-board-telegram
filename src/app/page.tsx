@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import Image from "next/image";
 import TaskList from "./components/TaskList";
 import TaskForm from "./components/TaskForm";
-import { initData, initDataRaw } from '@telegram-apps/sdk';
+import { useLaunchParams } from "@telegram-apps/sdk-react";
 
 import dynamic from 'next/dynamic';
 
@@ -18,29 +18,32 @@ function TaskBoard() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  const launchParams = useLaunchParams();
 
   // Decode the data from initData
-  const urlParams = new URLSearchParams(initDataRaw());
-  const startParam = urlParams.get('start_param');
+  const startParam = launchParams?.tgWebAppStartParam;
+  
+
+  
   
   console.log('Start Param:', startParam);
 
   useEffect(() => {
     const initializeComponent = async () => {
       try {
-        if (initData?.startParam) {
-          const encodedGroupId = initData.startParam;
+        if (startParam) {
+          const encodedGroupId = startParam;
           try {
             const decodedGroupId = atob(String(encodedGroupId));
             console.log("Decoded Group ID:", decodedGroupId);
             setGroupId(decodedGroupId);
           } catch (error) {
             console.error("Error decoding group ID:", error);
-            setError("Invalid group ID format, ${JSON.stringify(initData)");
+            setError(`Invalid group ID format, ${JSON.stringify(startParam)}`);
           }
         } else {
           console.log("No start_param available");
-          setError(`No group ID provided, ${JSON.stringify(initData)}`);
+          setError(`No group ID provided, ${startParam}`);
         }
       } catch (error) {
         console.error("Error in initializeComponent:", error);
