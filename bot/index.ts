@@ -1,5 +1,5 @@
 import { Telegraf } from 'telegraf';
-import config from './config';
+import { config } from './config';
 
 console.log(config.botToken); // Use it safely
 
@@ -41,7 +41,7 @@ bot.command('webapp', (ctx: any) => {
         ]]
       }
     });
-});
+  });
 
 bot.launch().then(() => {
   console.log('Bot is running...');
